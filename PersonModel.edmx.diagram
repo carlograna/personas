@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9e8d0b8aa7b343adac6b80745f1360e5" Name="Diagram1" ZoomLevel="65">
+        <EntityTypeShape EntityType="PersonModel.KCCas" Width="1.5" PointX="3" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PersonModel.KCOrganization" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PersonModel.KCPerson" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <AssociationConnector Association="PersonModel.FK_KCCases_KCPerson" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="PersonModel.KCPersonAlias" Width="1.5" PointX="3" PointY="9.375" />
+        <AssociationConnector Association="PersonModel.FK_KCPersonAlias_KCPersonID" />
+        <EntityTypeShape EntityType="PersonModel.KCPersonFinancial" Width="1.5" PointX="2.875" PointY="13.5" />
+        <EntityTypeShape EntityType="PersonModel.KCTrackDemographicChanx" Width="2.375" PointX="2.875" PointY="0.5" />
+        <AssociationConnector Association="PersonModel.FK_KCPersonFinancial_Person" />
+        <AssociationConnector Association="PersonModel.FK_KCTrackDemographicChanges_KCPPerson" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

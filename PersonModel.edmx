@@ -1,0 +1,713 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PersonModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="KCCases">
+          <Key>
+            <PropertyRef Name="KCCaseID" />
+          </Key>
+          <Property Name="KCCaseID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="KCPersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CaseNumber" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="Caption" Type="varchar" MaxLength="100" />
+          <Property Name="CaseNotes" Type="varchar(max)" />
+          <Property Name="AllocationMethod" Type="char" MaxLength="1" />
+          <Property Name="Allocation" Type="float" />
+          <Property Name="ModifiedStamp" Type="datetime" />
+          <Property Name="ModifiedBy" Type="char" MaxLength="32" />
+          <Property Name="CountyID" Type="char" MaxLength="2" />
+          <Property Name="DebtID" Type="int" />
+          <Property Name="DebtType" Type="char" MaxLength="1" />
+          <Property Name="CPName" Type="varchar" MaxLength="90" />
+          <Property Name="ThirdPartyPayeeName" Type="varchar" MaxLength="90" />
+          <Property Name="DebtCreatedDate" Type="datetime" />
+          <Property Name="CaseStatus" Type="char" MaxLength="4" />
+          <Property Name="MisappliedPaymentFlag" Type="bit" Nullable="false" />
+          <Property Name="IsPayor" Type="bit" Nullable="false" />
+          <Property Name="AltCaseNumber" Type="varchar" MaxLength="25" />
+          <Property Name="OtherID" Type="varchar" MaxLength="25" />
+          <Property Name="ToBeDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="KCOrganization">
+          <Key>
+            <PropertyRef Name="KCOrganizationID" />
+          </Key>
+          <Property Name="KCOrganizationID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="KCOrgTypeID" Type="int" Nullable="false" />
+          <Property Name="StateID" Type="varchar" MaxLength="50" />
+          <Property Name="Name" Type="varchar" MaxLength="255" />
+          <Property Name="Address" Type="varchar" MaxLength="255" />
+          <Property Name="City" Type="varchar" MaxLength="25" />
+          <Property Name="State" Type="varchar" MaxLength="20" />
+          <Property Name="Zip" Type="varchar" MaxLength="10" />
+          <Property Name="FTIN" Type="varchar" MaxLength="15" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="10" />
+          <Property Name="PhoneExt" Type="varchar" MaxLength="4" />
+          <Property Name="Fax" Type="varchar" MaxLength="10" />
+          <Property Name="LastGlobalBatchID" Type="int" />
+          <Property Name="LastTransactionID" Type="int" />
+          <Property Name="Notes" Type="varchar(max)" />
+          <Property Name="KCOrgPaymentMethodID" Type="int" Nullable="false" />
+          <Property Name="ACHFileID" Type="char" MaxLength="25" />
+          <Property Name="ModifiedStamp" Type="datetime" />
+          <Property Name="ModifiedBy" Type="varchar" MaxLength="32" />
+          <Property Name="LastLogin" Type="datetime" />
+          <Property Name="LastWebPayment" Type="datetime" />
+          <Property Name="IsSDU" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KCPerson">
+          <Key>
+            <PropertyRef Name="KCPersonID" />
+          </Key>
+          <Property Name="KCPersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SSN" Type="char" MaxLength="9" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" />
+          <Property Name="FirstName" Type="varchar" MaxLength="40" />
+          <Property Name="MiddleName" Type="varchar" MaxLength="20" />
+          <Property Name="Suffix" Type="varchar" MaxLength="3" />
+          <Property Name="Address" Type="varchar" MaxLength="255" />
+          <Property Name="City" Type="varchar" MaxLength="25" />
+          <Property Name="State" Type="varchar" MaxLength="20" />
+          <Property Name="Zip" Type="varchar" MaxLength="10" />
+          <Property Name="HomePhone" Type="varchar" MaxLength="10" />
+          <Property Name="CellPhone" Type="varchar" MaxLength="10" />
+          <Property Name="WorkPhone" Type="varchar" MaxLength="10" />
+          <Property Name="WorkExtension" Type="varchar" MaxLength="5" />
+          <Property Name="eMail" Type="varchar" MaxLength="255" />
+          <Property Name="Country" Type="varchar" MaxLength="20" />
+          <Property Name="DateOfBirth" Type="datetime" />
+          <Property Name="DateOfDeath" Type="datetime" />
+          <Property Name="Notes" Type="varchar(max)" />
+          <Property Name="ModifiedStamp" Type="datetime" />
+          <Property Name="ModifiedBy" Type="char" MaxLength="32" />
+          <Property Name="PINNumber" Type="int" />
+          <Property Name="PersonID" Type="varchar" MaxLength="13" />
+          <Property Name="Pager" Type="varchar" MaxLength="10" />
+          <Property Name="AlternateEmail" Type="varchar" MaxLength="255" />
+          <Property Name="BillingEmail" Type="varchar" MaxLength="255" />
+          <Property Name="KCDeliveryMethodID" Type="tinyint" Nullable="false" />
+          <Property Name="FVI" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="tinyint" />
+          <Property Name="InactiveDate" Type="datetime" />
+          <Property Name="InvalidAddress" Type="bit" Nullable="false" />
+          <Property Name="DenyWebAccess" Type="bit" Nullable="false" />
+          <Property Name="ChangeReasonCode" Type="tinyint" />
+          <Property Name="PaymentNotification" Type="bit" Nullable="false" />
+          <Property Name="CreationStamp" Type="datetime" />
+          <Property Name="KCPaymentMethodID" Type="tinyint" />
+          <Property Name="AddressStamp" Type="datetime" />
+          <Property Name="PhoneStamp" Type="datetime" />
+          <Property Name="EmailStamp" Type="datetime" />
+          <Property Name="BillingEmailStamp" Type="datetime" />
+          <Property Name="DeliveryMethodStamp" Type="datetime" />
+          <Property Name="DODStamp" Type="datetime" />
+          <Property Name="PaymentMethodStamp" Type="datetime" />
+          <Property Name="SignMeUpForEbs" Type="tinyint" />
+          <Property Name="IVDStatus" Type="bit" />
+        </EntityType>
+        <EntityType Name="KCPersonAlias">
+          <Key>
+            <PropertyRef Name="KCPersonAliasID" />
+          </Key>
+          <Property Name="KCPersonAliasID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="KCPersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SSN" Type="char" MaxLength="9" />
+          <Property Name="LastName" Type="char" MaxLength="25" />
+          <Property Name="FirstName" Type="char" MaxLength="20" />
+          <Property Name="MiddleName" Type="char" MaxLength="20" />
+          <Property Name="Suffix" Type="char" MaxLength="3" />
+          <Property Name="ModifiedStamp" Type="datetime" />
+          <Property Name="ModifiedBy" Type="char" MaxLength="32" />
+          <Property Name="PersonID" Type="char" MaxLength="13" />
+        </EntityType>
+        <EntityType Name="KCPersonFinancial">
+          <Key>
+            <PropertyRef Name="KCPersonFinancialID" />
+          </Key>
+          <Property Name="KCPersonFinancialID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="KCPersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ABA" Type="char" MaxLength="30" Nullable="false" />
+          <Property Name="Account" Type="char" MaxLength="30" Nullable="false" />
+          <Property Name="KCAccountTypeID" Type="tinyint" Nullable="false" />
+          <Property Name="AcceptChecks" Type="tinyint" />
+          <Property Name="DirectDeposit" Type="tinyint" />
+          <Property Name="BadCheckCount" Type="smallint" />
+          <Property Name="LastBadCheck" Type="datetime" />
+          <Property Name="ACHAuthType" Type="tinyint" />
+          <Property Name="AutoPayFrequency" Type="tinyint" />
+          <Property Name="AutoPayAmount" Type="money" />
+          <Property Name="AutoPayTransactionDate" Type="datetime" />
+          <Property Name="AutoPayStartDate" Type="datetime" />
+          <Property Name="AutoPayStopDate" Type="datetime" />
+          <Property Name="Prenoted" Type="tinyint" />
+          <Property Name="PrenotedDate" Type="datetime" />
+          <Property Name="ModifiedStamp" Type="datetime" />
+          <Property Name="ModifiedBy" Type="char" MaxLength="32" />
+          <Property Name="EPCStart" Type="datetime" />
+          <Property Name="EPCActivated" Type="datetime" />
+          <Property Name="EPCDeactivated" Type="datetime" />
+          <Property Name="EPCCardOrdered" Type="bit" Nullable="false" />
+          <Property Name="EPCSpecialHandling" Type="bit" Nullable="false" />
+          <Property Name="EPCMaidenName" Type="varchar" MaxLength="50" />
+          <Property Name="DisplayOnWeb" Type="bit" Nullable="false" />
+          <Property Name="AutoPayDayOfMonth" Type="tinyint" />
+          <Property Name="PmtAuthType" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KCTrackDemographicChanges">
+          <Key>
+            <PropertyRef Name="KCTrackDemographicChangesID" />
+          </Key>
+          <Property Name="KCTrackDemographicChangesID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KCPersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Account" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="RecordType" Type="int" Nullable="false" />
+          <Property Name="FieldName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="FieldData" Type="varchar" MaxLength="255" />
+          <Property Name="Exported" Type="bit" Nullable="false" />
+          <Property Name="ExportedDate" Type="datetime" />
+          <Property Name="ModifiedStamp" Type="datetime" />
+          <Property Name="ModifiedBy" Type="varchar" MaxLength="32" />
+        </EntityType>
+        <Association Name="FK_KCCases_KCPerson">
+          <End Role="KCPerson" Type="Self.KCPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="KCCases" Type="Self.KCCases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KCPerson">
+              <PropertyRef Name="KCPersonID" />
+            </Principal>
+            <Dependent Role="KCCases">
+              <PropertyRef Name="KCPersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_KCPersonAlias_KCPersonID">
+          <End Role="KCPerson" Type="Self.KCPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="KCPersonAlias" Type="Self.KCPersonAlias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KCPerson">
+              <PropertyRef Name="KCPersonID" />
+            </Principal>
+            <Dependent Role="KCPersonAlias">
+              <PropertyRef Name="KCPersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_KCPersonFinancial_Person">
+          <End Role="KCPerson" Type="Self.KCPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="KCPersonFinancial" Type="Self.KCPersonFinancial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KCPerson">
+              <PropertyRef Name="KCPersonID" />
+            </Principal>
+            <Dependent Role="KCPersonFinancial">
+              <PropertyRef Name="KCPersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_KCTrackDemographicChanges_KCPPerson">
+          <End Role="KCPerson" Type="Self.KCPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="KCTrackDemographicChanges" Type="Self.KCTrackDemographicChanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KCPerson">
+              <PropertyRef Name="KCPersonID" />
+            </Principal>
+            <Dependent Role="KCTrackDemographicChanges">
+              <PropertyRef Name="KCPersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PersonModelStoreContainer">
+          <EntitySet Name="KCCases" EntityType="Self.KCCases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KCOrganization" EntityType="Self.KCOrganization" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KCPerson" EntityType="Self.KCPerson" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KCPersonAlias" EntityType="Self.KCPersonAlias" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KCPersonFinancial" EntityType="Self.KCPersonFinancial" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KCTrackDemographicChanges" EntityType="Self.KCTrackDemographicChanges" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_KCCases_KCPerson" Association="Self.FK_KCCases_KCPerson">
+            <End Role="KCPerson" EntitySet="KCPerson" />
+            <End Role="KCCases" EntitySet="KCCases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_KCPersonAlias_KCPersonID" Association="Self.FK_KCPersonAlias_KCPersonID">
+            <End Role="KCPerson" EntitySet="KCPerson" />
+            <End Role="KCPersonAlias" EntitySet="KCPersonAlias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_KCPersonFinancial_Person" Association="Self.FK_KCPersonFinancial_Person">
+            <End Role="KCPerson" EntitySet="KCPerson" />
+            <End Role="KCPersonFinancial" EntitySet="KCPersonFinancial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_KCTrackDemographicChanges_KCPPerson" Association="Self.FK_KCTrackDemographicChanges_KCPPerson">
+            <End Role="KCPerson" EntitySet="KCPerson" />
+            <End Role="KCTrackDemographicChanges" EntitySet="KCTrackDemographicChanges" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PersonModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="KCCas">
+          <Key>
+            <PropertyRef Name="KCCaseID" />
+          </Key>
+          <Property Name="KCCaseID" Type="Guid" Nullable="false" />
+          <Property Name="KCPersonID" Type="Guid" Nullable="false" />
+          <Property Name="CaseNumber" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Caption" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CaseNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="AllocationMethod" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Allocation" Type="Double" />
+          <Property Name="ModifiedStamp" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="CountyID" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="DebtID" Type="Int32" />
+          <Property Name="DebtType" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="CPName" Type="String" MaxLength="90" FixedLength="false" Unicode="false" />
+          <Property Name="ThirdPartyPayeeName" Type="String" MaxLength="90" FixedLength="false" Unicode="false" />
+          <Property Name="DebtCreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CaseStatus" Type="String" MaxLength="4" FixedLength="true" Unicode="false" />
+          <Property Name="MisappliedPaymentFlag" Type="Boolean" Nullable="false" />
+          <Property Name="IsPayor" Type="Boolean" Nullable="false" />
+          <Property Name="AltCaseNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="OtherID" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="ToBeDeleted" Type="Boolean" />
+          <NavigationProperty Name="KCPerson" Relationship="Self.FK_KCCases_KCPerson" FromRole="KCCases" ToRole="KCPerson" />
+        </EntityType>
+        <EntityType Name="KCOrganization">
+          <Key>
+            <PropertyRef Name="KCOrganizationID" />
+          </Key>
+          <Property Name="KCOrganizationID" Type="Guid" Nullable="false" />
+          <Property Name="KCOrgTypeID" Type="Int32" Nullable="false" />
+          <Property Name="StateID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Zip" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="FTIN" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneExt" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="Fax" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="LastGlobalBatchID" Type="Int32" />
+          <Property Name="LastTransactionID" Type="Int32" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="KCOrgPaymentMethodID" Type="Int32" Nullable="false" />
+          <Property Name="ACHFileID" Type="String" MaxLength="25" FixedLength="true" Unicode="false" />
+          <Property Name="ModifiedStamp" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="LastLogin" Type="DateTime" Precision="3" />
+          <Property Name="LastWebPayment" Type="DateTime" Precision="3" />
+          <Property Name="IsSDU" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KCPerson">
+          <Key>
+            <PropertyRef Name="KCPersonID" />
+          </Key>
+          <Property Name="KCPersonID" Type="Guid" Nullable="false" />
+          <Property Name="SSN" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Suffix" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Zip" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="HomePhone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CellPhone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="WorkPhone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="WorkExtension" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="eMail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+          <Property Name="DateOfDeath" Type="DateTime" Precision="3" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ModifiedStamp" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="PINNumber" Type="Int32" />
+          <Property Name="PersonID" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="Pager" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="AlternateEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BillingEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="KCDeliveryMethodID" Type="Byte" Nullable="false" />
+          <Property Name="FVI" Type="Boolean" Nullable="false" />
+          <Property Name="IsActive" Type="Byte" />
+          <Property Name="InactiveDate" Type="DateTime" Precision="3" />
+          <Property Name="InvalidAddress" Type="Boolean" Nullable="false" />
+          <Property Name="DenyWebAccess" Type="Boolean" Nullable="false" />
+          <Property Name="ChangeReasonCode" Type="Byte" />
+          <Property Name="PaymentNotification" Type="Boolean" Nullable="false" />
+          <Property Name="CreationStamp" Type="DateTime" Precision="3" />
+          <Property Name="KCPaymentMethodID" Type="Byte" />
+          <Property Name="AddressStamp" Type="DateTime" Precision="3" />
+          <Property Name="PhoneStamp" Type="DateTime" Precision="3" />
+          <Property Name="EmailStamp" Type="DateTime" Precision="3" />
+          <Property Name="BillingEmailStamp" Type="DateTime" Precision="3" />
+          <Property Name="DeliveryMethodStamp" Type="DateTime" Precision="3" />
+          <Property Name="DODStamp" Type="DateTime" Precision="3" />
+          <Property Name="PaymentMethodStamp" Type="DateTime" Precision="3" />
+          <Property Name="SignMeUpForEbs" Type="Byte" />
+          <Property Name="IVDStatus" Type="Boolean" />
+          <NavigationProperty Name="KCCases" Relationship="Self.FK_KCCases_KCPerson" FromRole="KCPerson" ToRole="KCCases" />
+          <NavigationProperty Name="KCPersonAlias" Relationship="PersonModel.FK_KCPersonAlias_KCPersonID" FromRole="KCPerson" ToRole="KCPersonAlia" />
+          <NavigationProperty Name="KCPersonFinancials" Relationship="PersonModel.FK_KCPersonFinancial_Person" FromRole="KCPerson" ToRole="KCPersonFinancial" />
+          <NavigationProperty Name="KCTrackDemographicChanges" Relationship="PersonModel.FK_KCTrackDemographicChanges_KCPPerson" FromRole="KCPerson" ToRole="KCTrackDemographicChanx" />
+        </EntityType>
+        <Association Name="FK_KCCases_KCPerson">
+          <End Role="KCPerson" Type="Self.KCPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="KCCases" Type="Self.KCCas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KCPerson">
+              <PropertyRef Name="KCPersonID" />
+            </Principal>
+            <Dependent Role="KCCases">
+              <PropertyRef Name="KCPersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PersonDBContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="KCCases" EntityType="Self.KCCas" />
+          <EntitySet Name="KCOrganizations" EntityType="Self.KCOrganization" />
+          <EntitySet Name="KCPersons" EntityType="Self.KCPerson" />
+          <AssociationSet Name="FK_KCCases_KCPerson" Association="Self.FK_KCCases_KCPerson">
+            <End Role="KCPerson" EntitySet="KCPersons" />
+            <End Role="KCCases" EntitySet="KCCases" />
+          </AssociationSet>
+          <EntitySet Name="KCPersonAliases" EntityType="PersonModel.KCPersonAlias" />
+          <AssociationSet Name="FK_KCPersonAlias_KCPersonID" Association="PersonModel.FK_KCPersonAlias_KCPersonID">
+            <End Role="KCPerson" EntitySet="KCPersons" />
+            <End Role="KCPersonAlia" EntitySet="KCPersonAliases" />
+          </AssociationSet>
+          <EntitySet Name="KCPersonFinancials" EntityType="PersonModel.KCPersonFinancial" />
+          <EntitySet Name="KCTrackDemographicChanges" EntityType="PersonModel.KCTrackDemographicChanx" />
+          <AssociationSet Name="FK_KCPersonFinancial_Person" Association="PersonModel.FK_KCPersonFinancial_Person">
+            <End Role="KCPerson" EntitySet="KCPersons" />
+            <End Role="KCPersonFinancial" EntitySet="KCPersonFinancials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_KCTrackDemographicChanges_KCPPerson" Association="PersonModel.FK_KCTrackDemographicChanges_KCPPerson">
+            <End Role="KCPerson" EntitySet="KCPersons" />
+            <End Role="KCTrackDemographicChanx" EntitySet="KCTrackDemographicChanges" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="KCPersonAlias">
+          <Key>
+            <PropertyRef Name="KCPersonAliasID" />
+          </Key>
+          <Property Name="KCPersonAliasID" Type="Guid" Nullable="false" />
+          <Property Name="KCPersonID" Type="Guid" Nullable="false" />
+          <Property Name="SSN" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="25" FixedLength="true" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="Suffix" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="ModifiedStamp" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="PersonID" Type="String" MaxLength="13" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="KCPerson" Relationship="PersonModel.FK_KCPersonAlias_KCPersonID" FromRole="KCPersonAlia" ToRole="KCPerson" />
+        </EntityType>
+        <Association Name="FK_KCPersonAlias_KCPersonID">
+          <End Type="PersonModel.KCPerson" Role="KCPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PersonModel.KCPersonAlias" Role="KCPersonAlia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KCPerson">
+              <PropertyRef Name="KCPersonID" />
+            </Principal>
+            <Dependent Role="KCPersonAlia">
+              <PropertyRef Name="KCPersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="KCPersonFinancial">
+          <Key>
+            <PropertyRef Name="KCPersonFinancialID" />
+          </Key>
+          <Property Name="KCPersonFinancialID" Type="Guid" Nullable="false" />
+          <Property Name="KCPersonID" Type="Guid" Nullable="false" />
+          <Property Name="ABA" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="false" />
+          <Property Name="Account" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="false" />
+          <Property Name="KCAccountTypeID" Type="Byte" Nullable="false" />
+          <Property Name="AcceptChecks" Type="Byte" />
+          <Property Name="DirectDeposit" Type="Byte" />
+          <Property Name="BadCheckCount" Type="Int16" />
+          <Property Name="LastBadCheck" Type="DateTime" Precision="3" />
+          <Property Name="ACHAuthType" Type="Byte" />
+          <Property Name="AutoPayFrequency" Type="Byte" />
+          <Property Name="AutoPayAmount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="AutoPayTransactionDate" Type="DateTime" Precision="3" />
+          <Property Name="AutoPayStartDate" Type="DateTime" Precision="3" />
+          <Property Name="AutoPayStopDate" Type="DateTime" Precision="3" />
+          <Property Name="Prenoted" Type="Byte" />
+          <Property Name="PrenotedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedStamp" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="EPCStart" Type="DateTime" Precision="3" />
+          <Property Name="EPCActivated" Type="DateTime" Precision="3" />
+          <Property Name="EPCDeactivated" Type="DateTime" Precision="3" />
+          <Property Name="EPCCardOrdered" Type="Boolean" Nullable="false" />
+          <Property Name="EPCSpecialHandling" Type="Boolean" Nullable="false" />
+          <Property Name="EPCMaidenName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DisplayOnWeb" Type="Boolean" Nullable="false" />
+          <Property Name="AutoPayDayOfMonth" Type="Byte" />
+          <Property Name="PmtAuthType" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="KCPerson" Relationship="PersonModel.FK_KCPersonFinancial_Person" FromRole="KCPersonFinancial" ToRole="KCPerson" />
+        </EntityType>
+        <EntityType Name="KCTrackDemographicChanx">
+          <Key>
+            <PropertyRef Name="KCTrackDemographicChangesID" />
+          </Key>
+          <Property Name="KCTrackDemographicChangesID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KCPersonID" Type="Guid" Nullable="false" />
+          <Property Name="Account" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="RecordType" Type="Int32" Nullable="false" />
+          <Property Name="FieldName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FieldData" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Exported" Type="Boolean" Nullable="false" />
+          <Property Name="ExportedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedStamp" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="KCPerson" Relationship="PersonModel.FK_KCTrackDemographicChanges_KCPPerson" FromRole="KCTrackDemographicChanx" ToRole="KCPerson" />
+        </EntityType>
+        <Association Name="FK_KCPersonFinancial_Person">
+          <End Type="PersonModel.KCPerson" Role="KCPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PersonModel.KCPersonFinancial" Role="KCPersonFinancial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KCPerson">
+              <PropertyRef Name="KCPersonID" />
+            </Principal>
+            <Dependent Role="KCPersonFinancial">
+              <PropertyRef Name="KCPersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_KCTrackDemographicChanges_KCPPerson">
+          <End Type="PersonModel.KCPerson" Role="KCPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PersonModel.KCTrackDemographicChanx" Role="KCTrackDemographicChanx" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KCPerson">
+              <PropertyRef Name="KCPersonID" />
+            </Principal>
+            <Dependent Role="KCTrackDemographicChanx">
+              <PropertyRef Name="KCPersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PersonModelStoreContainer" CdmEntityContainer="PersonDBContext">
+          <EntitySetMapping Name="KCCases">
+            <EntityTypeMapping TypeName="PersonModel.KCCas">
+              <MappingFragment StoreEntitySet="KCCases">
+                <ScalarProperty Name="KCCaseID" ColumnName="KCCaseID" />
+                <ScalarProperty Name="KCPersonID" ColumnName="KCPersonID" />
+                <ScalarProperty Name="CaseNumber" ColumnName="CaseNumber" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="CaseNotes" ColumnName="CaseNotes" />
+                <ScalarProperty Name="AllocationMethod" ColumnName="AllocationMethod" />
+                <ScalarProperty Name="Allocation" ColumnName="Allocation" />
+                <ScalarProperty Name="ModifiedStamp" ColumnName="ModifiedStamp" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CountyID" ColumnName="CountyID" />
+                <ScalarProperty Name="DebtID" ColumnName="DebtID" />
+                <ScalarProperty Name="DebtType" ColumnName="DebtType" />
+                <ScalarProperty Name="CPName" ColumnName="CPName" />
+                <ScalarProperty Name="ThirdPartyPayeeName" ColumnName="ThirdPartyPayeeName" />
+                <ScalarProperty Name="DebtCreatedDate" ColumnName="DebtCreatedDate" />
+                <ScalarProperty Name="CaseStatus" ColumnName="CaseStatus" />
+                <ScalarProperty Name="MisappliedPaymentFlag" ColumnName="MisappliedPaymentFlag" />
+                <ScalarProperty Name="IsPayor" ColumnName="IsPayor" />
+                <ScalarProperty Name="AltCaseNumber" ColumnName="AltCaseNumber" />
+                <ScalarProperty Name="OtherID" ColumnName="OtherID" />
+                <ScalarProperty Name="ToBeDeleted" ColumnName="ToBeDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KCOrganizations">
+            <EntityTypeMapping TypeName="PersonModel.KCOrganization">
+              <MappingFragment StoreEntitySet="KCOrganization">
+                <ScalarProperty Name="KCOrganizationID" ColumnName="KCOrganizationID" />
+                <ScalarProperty Name="KCOrgTypeID" ColumnName="KCOrgTypeID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Zip" ColumnName="Zip" />
+                <ScalarProperty Name="FTIN" ColumnName="FTIN" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneExt" ColumnName="PhoneExt" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+                <ScalarProperty Name="LastGlobalBatchID" ColumnName="LastGlobalBatchID" />
+                <ScalarProperty Name="LastTransactionID" ColumnName="LastTransactionID" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="KCOrgPaymentMethodID" ColumnName="KCOrgPaymentMethodID" />
+                <ScalarProperty Name="ACHFileID" ColumnName="ACHFileID" />
+                <ScalarProperty Name="ModifiedStamp" ColumnName="ModifiedStamp" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+                <ScalarProperty Name="LastWebPayment" ColumnName="LastWebPayment" />
+                <ScalarProperty Name="IsSDU" ColumnName="IsSDU" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KCPersons">
+            <EntityTypeMapping TypeName="PersonModel.KCPerson">
+              <MappingFragment StoreEntitySet="KCPerson">
+                <ScalarProperty Name="KCPersonID" ColumnName="KCPersonID" />
+                <ScalarProperty Name="SSN" ColumnName="SSN" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="Suffix" ColumnName="Suffix" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Zip" ColumnName="Zip" />
+                <ScalarProperty Name="HomePhone" ColumnName="HomePhone" />
+                <ScalarProperty Name="CellPhone" ColumnName="CellPhone" />
+                <ScalarProperty Name="WorkPhone" ColumnName="WorkPhone" />
+                <ScalarProperty Name="WorkExtension" ColumnName="WorkExtension" />
+                <ScalarProperty Name="eMail" ColumnName="eMail" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="DateOfDeath" ColumnName="DateOfDeath" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="ModifiedStamp" ColumnName="ModifiedStamp" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="PINNumber" ColumnName="PINNumber" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="Pager" ColumnName="Pager" />
+                <ScalarProperty Name="AlternateEmail" ColumnName="AlternateEmail" />
+                <ScalarProperty Name="BillingEmail" ColumnName="BillingEmail" />
+                <ScalarProperty Name="KCDeliveryMethodID" ColumnName="KCDeliveryMethodID" />
+                <ScalarProperty Name="FVI" ColumnName="FVI" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="InactiveDate" ColumnName="InactiveDate" />
+                <ScalarProperty Name="InvalidAddress" ColumnName="InvalidAddress" />
+                <ScalarProperty Name="DenyWebAccess" ColumnName="DenyWebAccess" />
+                <ScalarProperty Name="ChangeReasonCode" ColumnName="ChangeReasonCode" />
+                <ScalarProperty Name="PaymentNotification" ColumnName="PaymentNotification" />
+                <ScalarProperty Name="CreationStamp" ColumnName="CreationStamp" />
+                <ScalarProperty Name="KCPaymentMethodID" ColumnName="KCPaymentMethodID" />
+                <ScalarProperty Name="AddressStamp" ColumnName="AddressStamp" />
+                <ScalarProperty Name="PhoneStamp" ColumnName="PhoneStamp" />
+                <ScalarProperty Name="EmailStamp" ColumnName="EmailStamp" />
+                <ScalarProperty Name="BillingEmailStamp" ColumnName="BillingEmailStamp" />
+                <ScalarProperty Name="DeliveryMethodStamp" ColumnName="DeliveryMethodStamp" />
+                <ScalarProperty Name="DODStamp" ColumnName="DODStamp" />
+                <ScalarProperty Name="PaymentMethodStamp" ColumnName="PaymentMethodStamp" />
+                <ScalarProperty Name="SignMeUpForEbs" ColumnName="SignMeUpForEbs" />
+                <ScalarProperty Name="IVDStatus" ColumnName="IVDStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KCPersonAliases">
+            <EntityTypeMapping TypeName="PersonModel.KCPersonAlias">
+              <MappingFragment StoreEntitySet="KCPersonAlias">
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedStamp" ColumnName="ModifiedStamp" />
+                <ScalarProperty Name="Suffix" ColumnName="Suffix" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="SSN" ColumnName="SSN" />
+                <ScalarProperty Name="KCPersonID" ColumnName="KCPersonID" />
+                <ScalarProperty Name="KCPersonAliasID" ColumnName="KCPersonAliasID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KCPersonFinancials">
+            <EntityTypeMapping TypeName="PersonModel.KCPersonFinancial">
+              <MappingFragment StoreEntitySet="KCPersonFinancial">
+                <ScalarProperty Name="PmtAuthType" ColumnName="PmtAuthType" />
+                <ScalarProperty Name="AutoPayDayOfMonth" ColumnName="AutoPayDayOfMonth" />
+                <ScalarProperty Name="DisplayOnWeb" ColumnName="DisplayOnWeb" />
+                <ScalarProperty Name="EPCMaidenName" ColumnName="EPCMaidenName" />
+                <ScalarProperty Name="EPCSpecialHandling" ColumnName="EPCSpecialHandling" />
+                <ScalarProperty Name="EPCCardOrdered" ColumnName="EPCCardOrdered" />
+                <ScalarProperty Name="EPCDeactivated" ColumnName="EPCDeactivated" />
+                <ScalarProperty Name="EPCActivated" ColumnName="EPCActivated" />
+                <ScalarProperty Name="EPCStart" ColumnName="EPCStart" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedStamp" ColumnName="ModifiedStamp" />
+                <ScalarProperty Name="PrenotedDate" ColumnName="PrenotedDate" />
+                <ScalarProperty Name="Prenoted" ColumnName="Prenoted" />
+                <ScalarProperty Name="AutoPayStopDate" ColumnName="AutoPayStopDate" />
+                <ScalarProperty Name="AutoPayStartDate" ColumnName="AutoPayStartDate" />
+                <ScalarProperty Name="AutoPayTransactionDate" ColumnName="AutoPayTransactionDate" />
+                <ScalarProperty Name="AutoPayAmount" ColumnName="AutoPayAmount" />
+                <ScalarProperty Name="AutoPayFrequency" ColumnName="AutoPayFrequency" />
+                <ScalarProperty Name="ACHAuthType" ColumnName="ACHAuthType" />
+                <ScalarProperty Name="LastBadCheck" ColumnName="LastBadCheck" />
+                <ScalarProperty Name="BadCheckCount" ColumnName="BadCheckCount" />
+                <ScalarProperty Name="DirectDeposit" ColumnName="DirectDeposit" />
+                <ScalarProperty Name="AcceptChecks" ColumnName="AcceptChecks" />
+                <ScalarProperty Name="KCAccountTypeID" ColumnName="KCAccountTypeID" />
+                <ScalarProperty Name="Account" ColumnName="Account" />
+                <ScalarProperty Name="ABA" ColumnName="ABA" />
+                <ScalarProperty Name="KCPersonID" ColumnName="KCPersonID" />
+                <ScalarProperty Name="KCPersonFinancialID" ColumnName="KCPersonFinancialID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KCTrackDemographicChanges">
+            <EntityTypeMapping TypeName="PersonModel.KCTrackDemographicChanx">
+              <MappingFragment StoreEntitySet="KCTrackDemographicChanges">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedStamp" ColumnName="ModifiedStamp" />
+                <ScalarProperty Name="ExportedDate" ColumnName="ExportedDate" />
+                <ScalarProperty Name="Exported" ColumnName="Exported" />
+                <ScalarProperty Name="FieldData" ColumnName="FieldData" />
+                <ScalarProperty Name="FieldName" ColumnName="FieldName" />
+                <ScalarProperty Name="RecordType" ColumnName="RecordType" />
+                <ScalarProperty Name="Account" ColumnName="Account" />
+                <ScalarProperty Name="KCPersonID" ColumnName="KCPersonID" />
+                <ScalarProperty Name="KCTrackDemographicChangesID" ColumnName="KCTrackDemographicChangesID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
