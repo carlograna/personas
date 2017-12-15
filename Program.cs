@@ -469,6 +469,42 @@ namespace PersonLoad
                 {
                     using(var db = new PersonDBContext())
                     {
+                        var persons = db.KCPersons.Where(x => x.PersonID == rec04.PrimaryArpID).ToList();
+                            //.Select(store => new SelectListItem { Value = store.Name, Text = store.ID });
+
+
+                        if (persons.Count() > 1)
+                        {
+                            //var person = persons.Where(p => String.IsNullOrEmpty(p.SSN));
+
+                            List<KCPerson> noSSNPersonList = new List<KCPerson>();
+
+                            foreach(KCPerson person in persons)
+                            {
+                                if (String.IsNullOrEmpty(person.SSN)){
+                                    noSSNPersonList.Add(person);
+                                }                                
+                            }
+
+                            if (persons.Count == noSSNPersonList.Count)
+                            {
+                               ///All records have bad ssn
+                               /// no pick the one with the least modified date to keep
+                               /// 
+
+                                var maxModifiedDate = persons.Max(p => p.ModifiedStamp);
+                                var person = persons.Where(p => p.ModifiedStamp == maxModifiedDate); // this is my valid person.  I can delete the rest.
+
+                                db.KCPersons.RemoveRange()/// remove all but the one above.
+
+                            }
+
+                            /// I am running into problems for building this
+                            /// what is
+                        }
+                            
+                       
+
                         var person = db.KCPersons.SingleOrDefault(x => x.PersonID == rec04.SecondaryArpID);
 
                         if( person != null)
