@@ -8,12 +8,6 @@ namespace PersonLoad
 {
     class RecordType04
     {
-        //private string recordType;
-        //private string primaryArpId;
-        //private string secondaryArpId;
-        //private DateTime modifiedStamp;
-        //private string filler;
-
         public string RecordType { get; set; }
         public string PrimaryArpID { get; set; }
         public string SecondaryArpID { get; set; }

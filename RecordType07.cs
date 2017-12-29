@@ -8,22 +8,6 @@ namespace PersonLoad
 {
     class RecordType07
     {
-        //private string recordType;
-        //private string personID;
-        //private string court;
-        //private string countyNumber;
-        //private string caseType;
-        //private int yearCode;
-        //private string seqNum;
-        //private string caseCaption;
-        //private string oldCaseNumber;
-        //private string fipsCode;
-        //private DateTime modifiedStamp;
-        //private string payorPayee;
-        //private string courtCaseId;
-        //private string ivdCaseNumber;
-        //private string filler;
-
         public string RecordType { get; set; }
         public string PersonID { get; set; }
         public string Court { get; set; }

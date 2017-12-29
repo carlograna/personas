@@ -454,6 +454,7 @@ namespace PersonLoad
         {
             try
             {
+                #region Comments
                 /// The primary ARP is the new ARP.  The secondary ARP 
                 /// is the ARP that should currently exists in our DB
                 ///Check to see if the old ARP and New ARP are not empty
@@ -463,123 +464,53 @@ namespace PersonLoad
                 ///if new value doesn't exist writ this to the log
                 ///if new value exist then the value has already been merged.
                 ///Old value should exist in the PersonAlias entity
+                #endregion
 
-                 
-                if(!String.IsNullOrEmpty(rec04.PrimaryArpID.Trim()) && !String.IsNullOrEmpty(rec04.SecondaryArpID.Trim()))
+                if (!String.IsNullOrEmpty(rec04.PrimaryArpID.Trim()) && !String.IsNullOrEmpty(rec04.SecondaryArpID.Trim()))
                 {
 
                     using(var db = new PersonDBContext())
                     {
-                        var primaryPersons = db.KCPersons.Where(x => x.PersonID == rec04.PrimaryArpID).ToList();
-                            //.Select(store => new SelectListItem { Value = store.Name, Text = store.ID });
+                        // primary person
+                        var pp = GetBestPerson(rec04.PrimaryArpID, db);
 
-
-                        # region OnePrimary
-                        if(primaryPersons.Count == 1){
-                            var primaryPerson = primaryPersons.First();
-
-                            if(ValidSSN(primaryPerson.SSN)){
-                                /// Check that there is an SSN with this primary ARP
-                                /// IF NOT make the secondary with the SSN the primary
-                                /// and delete the rest.
-
-                                /// Now check if there are secondary arp in the 
-                                /// KCPerson table and remove them
-
-                                var secondaryPersons = db.KCPersons.Where(x => x.PersonID == rec04.SecondaryArpID).ToList();
-
-                                /// Since there is only one GOOD primary then remove all the secondaries
-                                /// THEN update the Alias table
-                                /// 
-
-
-                                //db.KCPersons.RemoveRange(secondaryPersons);
-                                db.KCPersons.RemoveRange(secondaryPersons);
-
-                            }
-
-                            else{
-                                UpdateSecondaryToPrimary(rec04, db, primaryPerson);
-                            }
-                        }
-                        #endregion
-
-                        #region Duplicate Primaries
-                        if (primaryPersons.Count() > 1)
+                        if(!String.IsNullOrEmpty(pp.PersonID))
                         {
-                            /// In this case I don't want to get the best person right away
-                            /// I want to get one with SSN primarily so check the secondary
-                            /// for ssn first if nothing then get the bestPerson
-                            var primaryPerson = primaryPersons.Where(x => ValidSSN(x.SSN)).First();
-
-                            if (primaryPerson != null)
-                            {
-                                db.KCPersons.RemoveRange(primaryPersons.Where(x => x.KCPersonID != primaryPerson.KCPersonID).ToList());
-
-                                AddUpdateAlias(rec04, db, primaryPerson);
-                            }
-                            else
-                            {
-                                // check for the secondary with SSN first then get the bestPerson
-                                UpdateSecondaryToPrimary(rec04, db, primaryPerson);
-
-                                /// if UpdateSEcondaryToPrimary didn't do anything
-                                /// then get the best Person for the primary
-                                /// 
-
-                                primaryPerson = GetBestPerson(primaryPersons);
-                                
-                            }
+                            UpdateAliasAndCleanupPersonTables(db, pp);
                         }
                         else
                         {
-                            
-                        }
-                        # endregion
+                            var sp = GetBestPerson(rec04.SecondaryArpID, db);
+                            if (!String.IsNullOrEmpty(sp.PersonID))
+                            {
+                                UpdateSecondaryToBePrimary(rec04, sp);
+                                UpdateAliasAndCleanupPersonTables(db, sp);
+                            }
+                            else{
 
+                                pp = GetSecondBestPerson(rec04.PrimaryArpID, db);
 
+                                if (pp != null)
+                                {
+                                    UpdateAliasAndCleanupPersonTables(db, pp);
+                                }
+                                else
+                                {
+                                    sp = GetSecondBestPerson(rec04.SecondaryArpID, db);
 
-
-                        
-                            
-                        
-
-                        var person = db.KCPersons.SingleOrDefault(x => x.PersonID == rec04.SecondaryArpID);
-
-                        if( person != null)
-                        {
-                            KCPersonAlias personAlias = new KCPersonAlias{
-                                KCPersonAliasID = Guid.NewGuid(),
-                                KCPersonID = person.KCPersonID,
-                                SSN = person.SSN,
-                                LastName = person.LastName,
-                                FirstName = person.FirstName,
-                                MiddleName = person.MiddleName,
-                                Suffix = person.Suffix,
-                                ModifiedStamp = rec04.ModifiedStamp,
-                                ModifiedBy = "ArpLoad",
-                                PersonID = rec04.SecondaryArpID,
-                            };
-
-                            db.KCPersonAliases.Add(personAlias);
-
-                            LogPersonLoad(person.KCPersonID, ChangeType.MergedPerson);
-
-                            //Log person before changes
-                            LogPersonLoadDetail(Record.Deleted, person);
-
-                            //Change PersonID/ARP (Secondary is OLD, Primary is NEW)
-                            person.PersonID = rec04.PrimaryArpID;
-
-                            //Log person after changes
-                            LogPersonLoadDetail(Record.Inserted, person);
-                        }
-                        else{
-                            person = new KCPerson();
-                            person.PersonID = rec04.SecondaryArpID;//PersonID is null so Set = to rec04.SecondaryID(OLD ARP)
-
-                            LogPersonLoad(person.KCPersonID, ChangeType.SkippedPerson, "Secondary ARP not found in KCPerson for" + person.PersonID);
-                        }
+                                    if (sp != null)
+                                    {
+                                        UpdateSecondaryToBePrimary(rec04, sp);
+                                        UpdateAliasAndCleanupPersonTables(db, sp);
+                                    }
+                                    else
+                                    {
+                                       // log not primary or secondary found;  Should never happen.
+                                        progLog.WriteLine(String.Format("Primary ({0}) & secondary ({1}) ARP not found in KCPerson", rec04.PrimaryArpID, rec04.SecondaryArpID));
+                                    }
+                                }                                
+                            }
+                        }                                                                 
 
                         db.SaveChanges();
                     }
@@ -604,76 +535,31 @@ namespace PersonLoad
                 
         }
 
-        private static void UpdateSecondaryToPrimary(RecordType04 rec04, PersonDBContext db, KCPerson primaryPerson)
+        private static void UpdateAliasAndCleanupPersonTables(PersonDBContext db, KCPerson pp)
         {
-            /// if I dont have a valid ssn then look for one in the list of the secondary arp'
-            /// and retrieve the one with the latest modification date.
-            /// 
-            var secondaryPersons = db.KCPersons.Where(x => x.PersonID == rec04.SecondaryArpID).ToList();
-
-            if (secondaryPersons.Count == 1)
-            {
-                var secondaryPerson = secondaryPersons.First();
-                if (ValidSSN(secondaryPerson.SSN))
-                {
-
-                    // update the secondary to be primary
-                    secondaryPerson.PersonID = rec04.PrimaryArpID;
-
-                    // remove the primary
-                    db.KCPersons.Remove(primaryPerson);
-                }
-                else
-                {
-                    // Don't do anything keep the primary with invalid ssn because this one is also invalid
-                }
-            }
-            else if (secondaryPersons.Count > 1)
-            {
-
-                //var secondaryPersons = db.KCPersons.Where(x => x.PersonID == rec04.SecondaryArpID && ValidSSN(x.SSN)).ToList();
-                var secondaryPerson = GetBestPerson(secondaryPersons);
-
-
-                // update the secondary to be primary
-                secondaryPerson.PersonID = rec04.PrimaryArpID;
-
-                // remove the primary
-                db.KCPersons.Remove(primaryPerson);
-
-                // delete all the duplicate secondaries
-                db.KCPersons.RemoveRange(secondaryPersons.Where(x => x.KCPersonID != secondaryPerson.KCPersonID).ToList());
-
-            }
+            AddSecondaryToAlias(db, pp);
+            RemoveSecondaries(db);
+            RemovePrimaryDups(db, pp);
         }
 
-        private static KCPerson GetBestPerson(List<KCPerson> persons)
+        private static void UpdateSecondaryToBePrimary(RecordType04 rec04, KCPerson sp)
         {
+            
+            LogPersonLoad(sp.KCPersonID, ChangeType.MergedPerson);
 
-            var latestModifiedDate = persons.Max(x => x.ModifiedStamp);
+            //Log person before changes
+            LogPersonLoadDetail(Record.Deleted, sp);
+            
+            sp.PersonID = rec04.PrimaryArpID; //update secondary found record with primary arp;
+            //Log person after changes
+            LogPersonLoadDetail(Record.Inserted, sp);
 
-            if (persons.Any())
-            {
-                var person = persons.Where(x => x.ModifiedStamp == latestModifiedDate).FirstOrDefault();
-
-                if (!ValidSSN(person.SSN))
-                {
-                    persons.Remove(person);
-                    GetBestPerson(persons);
-                }
-
-                return person;
-            }
-            else
-            {
-                return new KCPerson();
-            }
         }
 
-        private static void AddUpdateAlias(RecordType04 rec04, PersonDBContext db, KCPerson person)
+        private static void AddSecondaryToAlias(PersonDBContext db, KCPerson person)
         {
             // ADD / UPDATE ALIAS
-            var personAlias = db.KCPersonAliases.FirstOrDefault(x => x.PersonID == rec04.SecondaryArpID && ValidSSN(x.SSN));
+            var personAlias = db.KCPersonAliases.FirstOrDefault(x => x.PersonID == rec04.SecondaryArpID);
 
             if (personAlias != null)
             {
@@ -703,6 +589,52 @@ namespace PersonLoad
 
                 db.KCPersonAliases.Add(personAlias);
             }
+        }
+
+        private static void RemovePrimaryDups(PersonDBContext db, KCPerson pp)
+        {
+            var primaryDups = from p in db.KCPersons
+                              where p.PersonID == pp.PersonID
+                              && p.KCPersonID != pp.KCPersonID
+                              select p;
+
+            db.KCPersons.RemoveRange(primaryDups);
+        }
+
+        private static void RemoveSecondaries(PersonDBContext db)
+        {
+            IQueryable<KCPerson> secondaries = from p in db.KCPersons
+                                               where p.PersonID == rec04.SecondaryArpID
+                                               select p;
+
+            db.KCPersons.RemoveRange(secondaries);
+        }
+
+        private static KCPerson GetBestPerson(string arp, PersonDBContext db )
+        {
+            List<KCPerson> persons = db.KCPersons.Where(p => p.PersonID == arp)
+                                                .OrderByDescending(p => p.ModifiedStamp)
+                                                .ToList();
+
+            foreach (var p in persons)
+            {
+                if (ValidSSN(p.SSN))
+                {
+                    return p;
+                }
+            }
+
+            return new KCPerson();// return empty person;
+        }
+
+        private static KCPerson GetSecondBestPerson(string arp, PersonDBContext db)
+        {
+
+            KCPerson person = db.KCPersons.Where(p => p.PersonID == arp)
+                                                .OrderByDescending(p => p.ModifiedStamp)
+                                                .FirstOrDefault();
+
+            return person;
         }
 
         private static bool ValidSSN(string ssn)
