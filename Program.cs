@@ -197,13 +197,20 @@ namespace PersonLoad
 
                 if (recordCount == rec01.RecordCount) {                    
                     /// If it is a weekly file delete court cases
-                    if (DataFile.IsWeekly)
-                    {
-                        using(var db = new PersonDBContext())
-                        {
-                            db.Database.ExecuteSqlCommand("DELETE FROM KCCases WHERE ToBeDeleted = 1"); 
-                        }
-                    }
+                    /// CS 12/29/2017 
+                    /// Commented this out because it wasn't doing anything.
+                    /// We are not deletin the cases anymore.  The section of 
+                    /// code that updates the ToBeDeleted = 1 was commented out
+                    /// a long time ago. So the code below was doing nothing because
+                    /// ToBeDeleted was always 0 (false)
+
+                    //if (DataFile.IsWeekly)
+                    //{
+                    //    using(var db = new PersonDBContext())
+                    //    {
+                    //        db.Database.ExecuteSqlCommand("DELETE FROM KCCases WHERE ToBeDeleted = 1"); 
+                    //    }
+                    //}
 
                     //Delete flag file
                     File.Delete(Regex.Replace(DataFile.Path, ConfigurationManager.AppSettings["DataFileExt"], ".FLG", RegexOptions.IgnoreCase));
@@ -1051,24 +1058,31 @@ namespace PersonLoad
             if (!String.IsNullOrEmpty(rec05.Suffix.Trim()))
                 person.Suffix = rec05.Suffix.Trim();
 
-                if (!String.IsNullOrEmpty(rec05.Address1.Trim()))
-                {
-                    person.Address = rec05.Address1.Trim();
-                    person.InvalidAddress = false;
-                }
-                else
-                { 
-                    person.InvalidAddress = true; 
-                }              
+            if (!String.IsNullOrEmpty(rec05.Address1.Trim()))
+            {
+                person.Address = rec05.Address1.Trim();
+                person.InvalidAddress = false;
+                person.AddressStamp = rec01.CreationStamp;
+            }
+            else
+            { 
+                person.InvalidAddress = true; 
+            }              
 
             if (!String.IsNullOrEmpty(rec05.Address2.Trim()))
+            {
                 person.Address += (Environment.NewLine + rec05.Address2.Trim());
-
+                person.AddressStamp = rec01.CreationStamp;
+            }
             if (!String.IsNullOrEmpty(rec05.Address3.Trim()))
+            {
                 person.Address += (Environment.NewLine + rec05.Address3.Trim());
+                person.AddressStamp = rec01.CreationStamp;
+            }
 
-            if(!String.IsNullOrEmpty(rec05.City.Trim()))
+            if (!String.IsNullOrEmpty(rec05.City.Trim()))
                 person.City = rec05.City.Trim();
+
             if(!String.IsNullOrEmpty(rec05.State.Trim()))
                 person.State = rec05.State.Trim();
 
@@ -1078,22 +1092,36 @@ namespace PersonLoad
             if (!String.IsNullOrEmpty(rec05.HomePhone.Trim()))
                 person.HomePhone = rec05.HomePhone.Trim();
 
-            if (!String.IsNullOrEmpty(rec05.CellPhone.Trim())) 
+            if (!String.IsNullOrEmpty(rec05.CellPhone.Trim()))
+            {
                 person.CellPhone = rec05.CellPhone.Trim();
-            
-            if(!String.IsNullOrEmpty(rec05.WorkPhone.Trim()))
+                person.PhoneStamp = rec01.CreationStamp;
+            }
+
+            if (!String.IsNullOrEmpty(rec05.WorkPhone.Trim()))
+            {
                 person.WorkPhone = rec05.WorkPhone.Trim();
+                person.PhoneStamp = rec01.CreationStamp;
+            }
 
             if (!String.IsNullOrEmpty(rec05.WorkExtension.Trim()))
+            {
                 person.WorkExtension = rec05.WorkExtension.Trim();
+                person.PhoneStamp = rec01.CreationStamp;
+            }
 
             if (!String.IsNullOrEmpty(rec05.PagerNumber.Trim()))
                 person.Pager = rec05.PagerNumber.Trim();
 
             if (!String.IsNullOrEmpty(rec05.DateofBirth.ToString()))
                 person.DateOfBirth = rec05.DateofBirth;
+
             if (!String.IsNullOrEmpty(rec05.DateofDeath.ToString()))
+            {
                 person.DateOfDeath = rec05.DateofDeath;
+                person.DODStamp = rec01.CreationStamp;
+            }
+
             if (!String.IsNullOrEmpty(rec05.Country.Trim()))
                 person.Country = rec05.Country.Trim();
 
@@ -1101,14 +1129,23 @@ namespace PersonLoad
                 person.FVI = rec05.FamilyViolenceInd.Trim() == "Y" ? true : false;
 
             if (!String.IsNullOrEmpty(rec05.EmailAddress.Trim()))
+            {
                 person.eMail = rec05.EmailAddress.Trim();
+                person.EmailStamp = rec01.CreationStamp;
+            }
 
             if (!String.IsNullOrEmpty(rec05.NotificationEmailAddress.Trim()))
+            {
                 person.BillingEmail = rec05.NotificationEmailAddress.Trim();
+                person.BillingEmailStamp = rec01.CreationStamp;
+            }
 
             byte deliveryMethodID;
             if (byte.TryParse(rec05.DeliveryMethod.Trim(), out deliveryMethodID))
+            {
                 person.KCDeliveryMethodID = deliveryMethodID;
+                person.DeliveryMethodStamp = rec01.CreationStamp;
+            }
 
             if (!String.IsNullOrEmpty(rec05.IVDStatus.Trim()))
                 person.IVDStatus = rec05.IVDStatus == "Y" ? true : false;

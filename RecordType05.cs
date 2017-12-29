@@ -8,36 +8,6 @@ namespace PersonLoad
 {
     class RecordType05
     {
-        //private string recordType;
-        //private string personID;
-        //private string ssn_ftin;
-        //private string lastName;
-        //private string firstName;
-        //private string middleName;
-        //private string suffix;
-        //private string address1;
-        //private string address2;
-        //private string address3;
-        //private string city;
-        //private string state;
-        //private string zip;
-        //private string homePhone;
-        //private string cellPhone;
-        //private string workPhone;
-        //private string workExtension;
-        //private string pagerNumber;
-        //private DateTime dateofBirth;
-        //private DateTime dateofDeath;
-        //private string country;
-        //private string familyViolenceInd;
-        //private string emailAddress;
-        //private string notificationEmailAddress;
-        //private string deliveryMethod;
-        //private string ivdStatus;
-        //private string sduInd;
-        //private string filler;
-
-
         public string RecordType {get; set;}
         public string PersonID {get; set;}
         public string SSN_FTIN {get; set;}
