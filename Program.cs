@@ -583,17 +583,19 @@ namespace PersonLoad
 
             else
             {
-                personAlias.KCPersonAliasID = Guid.NewGuid();
-                personAlias.KCPersonID = person.KCPersonID;
-                personAlias.SSN = person.SSN;
-                personAlias.LastName = person.LastName;
-                personAlias.FirstName = person.FirstName;
-                personAlias.MiddleName = person.MiddleName;
-                personAlias.Suffix = person.Suffix;
-                personAlias.ModifiedStamp = rec04.ModifiedStamp;
-                personAlias.ModifiedBy = "ArpLoad";
-                personAlias.PersonID = rec04.SecondaryArpID;
-
+                personAlias = new KCPersonAlias
+                {
+                    KCPersonAliasID = Guid.NewGuid(),
+                    KCPersonID = person.KCPersonID,
+                    SSN = person.SSN,
+                    LastName = person.LastName,
+                    FirstName = person.FirstName,
+                    MiddleName = person.MiddleName,
+                    Suffix = person.Suffix,
+                    ModifiedStamp = rec04.ModifiedStamp,
+                    ModifiedBy = "ArpLoad",
+                    PersonID = rec04.SecondaryArpID,
+                };
                 db.KCPersonAliases.Add(personAlias);
             }
         }
