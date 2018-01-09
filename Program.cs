@@ -93,18 +93,18 @@ namespace PersonLoad
         {
             try
             {
-                DisableTriggers();
-                
                 //Program log
                 progLog = new Log(ConfigurationManager.AppSettings["ProgLogDirPath"]
                                     + ConfigurationManager.AppSettings["ProgLogFileName"]
                                     + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString()
                                     + ConfigurationManager.AppSettings["ProgLogFileExt"]);
-                                    //+ Path.GetFileName(DataFile.Path)
-                                    //        .Replace(ConfigurationManager.AppSettings["DataFileExt"], ConfigurationManager.AppSettings["ProgLogFileExt"]));
+                //+ Path.GetFileName(DataFile.Path)
+                //        .Replace(ConfigurationManager.AppSettings["DataFileExt"], ConfigurationManager.AppSettings["ProgLogFileExt"]));
 
                 progLog.WriteLine(String.Format("----- Start: {0} -----", DateTime.Now.ToString()));
-                
+
+                DisableTriggers();                
+                                
                 //Get Input File
                 DataFile.Directory = ConfigurationManager.AppSettings["DataFileDirPath"].ToString();
 
@@ -490,7 +490,7 @@ namespace PersonLoad
                             var sp = GetBestPerson(rec04.SecondaryArpID, db);
                             if (!String.IsNullOrEmpty(sp.PersonID))
                             {
-                                UpdateSecondaryToBePrimary(rec04, sp);
+                                UpdateSecondaryToBePrimary(rec04, sp, db);
                                 UpdateAliasAndCleanupPersonTables(db, sp);
                             }
                             else{
@@ -507,7 +507,7 @@ namespace PersonLoad
 
                                     if (sp != null)
                                     {
-                                        UpdateSecondaryToBePrimary(rec04, sp);
+                                        UpdateSecondaryToBePrimary(rec04, sp, db);
                                         UpdateAliasAndCleanupPersonTables(db, sp);
                                     }
                                     else
@@ -549,7 +549,7 @@ namespace PersonLoad
             RemovePrimaryDups(db, pp);
         }
 
-        private static void UpdateSecondaryToBePrimary(RecordType04 rec04, KCPerson sp)
+        private static void UpdateSecondaryToBePrimary(RecordType04 rec04, KCPerson sp, PersonDBContext db)
         {
             
             LogPersonLoad(sp.KCPersonID, ChangeType.MergedPerson);
@@ -558,6 +558,7 @@ namespace PersonLoad
             LogPersonLoadDetail(Record.Deleted, sp);
             
             sp.PersonID = rec04.PrimaryArpID; //update secondary found record with primary arp;
+            db.SaveChanges();
             //Log person after changes
             LogPersonLoadDetail(Record.Inserted, sp);
 
@@ -576,7 +577,7 @@ namespace PersonLoad
                 personAlias.FirstName = person.FirstName;
                 personAlias.MiddleName = person.MiddleName;
                 personAlias.Suffix = person.Suffix;
-                personAlias.ModifiedStamp = rec04.ModifiedStamp;
+                //personAlias.ModifiedStamp = rec04.ModifiedStamp; //handled by update trigger
                 personAlias.ModifiedBy = "ArpLoad";
                 personAlias.PersonID = rec04.SecondaryArpID;
             }
@@ -608,6 +609,7 @@ namespace PersonLoad
                               select p;
 
             db.KCPersons.RemoveRange(primaryDups);
+            db.SaveChanges();
         }
 
         private static void RemoveSecondaries(PersonDBContext db)
@@ -617,6 +619,7 @@ namespace PersonLoad
                                                select p;
 
             db.KCPersons.RemoveRange(secondaries);
+            db.SaveChanges();
         }
 
         private static KCPerson GetBestPerson(string arp, PersonDBContext db )
@@ -650,14 +653,21 @@ namespace PersonLoad
         {
             try
             {
-                ssn = ssn.Trim().Replace("-", "");                
+                if (ssn != null)
+                {
+                    ssn = ssn.Trim().Replace("-", "");                
 
-                Regex regex = new Regex("^[0-9]{9}$");
+                    Regex regex = new Regex("^[0-9]{9}$");
 
-                if (regex.Match(ssn).Success)
-                    return true;
+                    if (regex.Match(ssn).Success)
+                        return true;
+                    else
+                        return false;
+                }
                 else
+                {
                     return false;
+                }
             }
             catch
             {
