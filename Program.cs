@@ -700,7 +700,7 @@ namespace PersonLoad
                             ,PaymentMethodStamp = rec01.CreationStamp
                         };
                         
-                        PersonProperties(rec05, ref person);
+                        PersonUpdate(rec05, ref person);
 
                         db.KCPersons.Add(person);
 
@@ -725,9 +725,9 @@ namespace PersonLoad
 
                                 LogPersonLoadDetail(Record.Deleted, person);//log old record
                                 
-                                EpcDemographicChanges(person, rec05); //call before PersonProperties
+                                EpcDemographicChanges(person, rec05); //call before PersonUpdate
 
-                                PersonProperties(rec05, ref person); //update person
+                                PersonUpdate(rec05, ref person); //update person
 
                                 LogPersonLoadDetail(Record.Inserted, person); //log new record
                             }
@@ -1030,28 +1030,48 @@ namespace PersonLoad
                 return true;
         }
 
-        private static bool IsSameAddress(string current_address, string new_address1, string new_address2, string new_address3)
+        private static bool IsSameAddress(string current_address, string address1, string address2, string address3)
         {
             /// The address field from the database has one column
             /// while the value from the file is split in three
             /// fields (addres1, address2 and adress3)
+            /// 
+
+            // New address
+            string new_address1 = address1.Trim();
+            string new_address2 = address2.Trim();
+            string new_address3 = address3.Trim();
             StringBuilder sbNewAddress = new StringBuilder();
 
             sbNewAddress.Append(new_address1);
             if (!String.IsNullOrEmpty(new_address2))
-                sbNewAddress.Append(Environment.NewLine).Append(new_address2);
+                sbNewAddress.Append(new_address2);
 
             if (!String.IsNullOrEmpty(new_address3))
-                sbNewAddress.Append(Environment.NewLine).Append(new_address3);
+                sbNewAddress.Append(new_address3);
 
+            string newAddress = sbNewAddress.ToString().Replace(" ", String.Empty);
 
-            if ((current_address ?? "") == sbNewAddress.ToString())
+            
+            // Current address
+            string[] addresses = current_address.Split(new string[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string cur_addr_clean = String.Empty;
+
+            foreach (string addr in addresses)
+            {
+                cur_addr_clean += addr;
+            }
+
+            cur_addr_clean = cur_addr_clean.Replace(" ", String.Empty);
+
+            // compare
+            if (cur_addr_clean == newAddress)
                 return true;
             else
                 return false;
         }
 
-        private static void PersonProperties(RecordType05 rec05, ref KCPerson person)
+        private static void PersonUpdate(RecordType05 rec05, ref KCPerson person)
         {
             if (!String.IsNullOrEmpty(rec05.PersonID.Trim()))
                 person.PersonID = rec05.PersonID.Trim();
@@ -1072,24 +1092,27 @@ namespace PersonLoad
 
             if (!String.IsNullOrEmpty(rec05.Address1.Trim()))
             {
-                person.Address = rec05.Address1.Trim();
-                person.InvalidAddress = false;
-                person.AddressStamp = rec01.CreationStamp;
+                if (!IsSameAddress(person.Address, rec05.Address1, rec05.Address2, rec05.Address3))
+                {
+                    person.Address = rec05.Address1.Trim();
+
+                    if (!String.IsNullOrEmpty(rec05.Address2.Trim()))
+                    {
+                        person.Address += (Environment.NewLine + rec05.Address2.Trim());
+                    }
+                    if (!String.IsNullOrEmpty(rec05.Address3.Trim()))
+                    {
+                        person.Address += (Environment.NewLine + rec05.Address3.Trim());
+                    }
+
+                    person.InvalidAddress = false;
+                    person.AddressStamp = rec01.CreationStamp;
+
+                }
             }
             else
-            { 
-                person.InvalidAddress = true; 
-            }              
-
-            if (!String.IsNullOrEmpty(rec05.Address2.Trim()))
             {
-                person.Address += (Environment.NewLine + rec05.Address2.Trim());
-                person.AddressStamp = rec01.CreationStamp;
-            }
-            if (!String.IsNullOrEmpty(rec05.Address3.Trim()))
-            {
-                person.Address += (Environment.NewLine + rec05.Address3.Trim());
-                person.AddressStamp = rec01.CreationStamp;
+                person.InvalidAddress = true;
             }
 
             if (!String.IsNullOrEmpty(rec05.City.Trim()))
@@ -1102,25 +1125,48 @@ namespace PersonLoad
                 person.Zip = rec05.Zip.Trim();
 
             if (!String.IsNullOrEmpty(rec05.HomePhone.Trim()))
-                person.HomePhone = rec05.HomePhone.Trim();
+            {
+                if (person.HomePhone != rec05.HomePhone.Trim())
+                {
+                    person.HomePhone = rec05.HomePhone.Trim();
+                    person.PhoneStamp = rec01.CreationStamp;
+                }
+            }
 
             if (!String.IsNullOrEmpty(rec05.CellPhone.Trim()))
             {
-                person.CellPhone = rec05.CellPhone.Trim();
-                person.PhoneStamp = rec01.CreationStamp;
+                if (person.CellPhone != rec05.CellPhone.Trim())
+                {
+                    person.CellPhone = rec05.CellPhone.Trim();
+                    person.PhoneStamp = rec01.CreationStamp;
+                }
             }
 
-            if (!String.IsNullOrEmpty(rec05.WorkPhone.Trim()))
+            if (!String.IsNullOrEmpty(rec05.WorkPhone.Trim()) ||!String.IsNullOrEmpty(rec05.WorkExtension.Trim()))
             {
-                person.WorkPhone = rec05.WorkPhone.Trim();
-                person.PhoneStamp = rec01.CreationStamp;
-            }
+                bool workPhoneChanged = false;
 
-            if (!String.IsNullOrEmpty(rec05.WorkExtension.Trim()))
-            {
-                person.WorkExtension = rec05.WorkExtension.Trim();
-                person.PhoneStamp = rec01.CreationStamp;
-            }
+                if (!String.IsNullOrEmpty(rec05.WorkPhone.Trim()))
+                {
+                    if (person.WorkPhone != rec05.WorkPhone.Trim())
+                    {
+                        person.WorkPhone = rec05.WorkPhone.Trim();
+                        workPhoneChanged = true;
+                    }
+                }
+
+                if (!String.IsNullOrEmpty(rec05.WorkExtension.Trim()))
+                {
+                    if (person.WorkExtension != rec05.WorkExtension.Trim())
+                    {
+                        person.WorkExtension = rec05.WorkExtension.Trim();
+                        workPhoneChanged = true;
+                    }
+                }
+
+                if (workPhoneChanged)
+                    person.PhoneStamp = rec01.CreationStamp;
+            }            
 
             if (!String.IsNullOrEmpty(rec05.PagerNumber.Trim()))
                 person.Pager = rec05.PagerNumber.Trim();
@@ -1140,13 +1186,15 @@ namespace PersonLoad
             if (!String.IsNullOrEmpty(rec05.FamilyViolenceInd.Trim()))
                 person.FVI = rec05.FamilyViolenceInd.Trim() == "Y" ? true : false;
 
-            if (!String.IsNullOrEmpty(rec05.EmailAddress.Trim()))
+            if (!String.IsNullOrEmpty(rec05.EmailAddress.Trim())
+                && (person.eMail != rec05.EmailAddress.Trim()))
             {
-                person.eMail = rec05.EmailAddress.Trim();
-                person.EmailStamp = rec01.CreationStamp;
+                    person.eMail = rec05.EmailAddress.Trim();
+                    person.EmailStamp = rec01.CreationStamp;
             }
 
-            if (!String.IsNullOrEmpty(rec05.NotificationEmailAddress.Trim()))
+            if (!String.IsNullOrEmpty(rec05.NotificationEmailAddress.Trim())
+                && (person.BillingEmail != rec05.NotificationEmailAddress))
             {
                 person.BillingEmail = rec05.NotificationEmailAddress.Trim();
                 person.BillingEmailStamp = rec01.CreationStamp;
@@ -1155,8 +1203,11 @@ namespace PersonLoad
             byte deliveryMethodID;
             if (byte.TryParse(rec05.DeliveryMethod.Trim(), out deliveryMethodID))
             {
-                person.KCDeliveryMethodID = deliveryMethodID;
-                person.DeliveryMethodStamp = rec01.CreationStamp;
+                if (person.KCDeliveryMethodID != deliveryMethodID)
+                {
+                    person.KCDeliveryMethodID = deliveryMethodID;
+                    person.DeliveryMethodStamp = rec01.CreationStamp;
+                }
             }
 
             if (!String.IsNullOrEmpty(rec05.IVDStatus.Trim()))
@@ -1202,11 +1253,11 @@ namespace PersonLoad
                                     );
                         }
 
-                        PersonCaseProperties(rec07, EntityID, altCaseNumber);
+                        PersonCaseUpdate(rec07, EntityID, altCaseNumber);
 
                         //Check for the IVD number and save it in a new record
                         if (!String.IsNullOrEmpty(rec07.IVDCaseNumber.Trim()))
-                            PersonCaseProperties(rec07, EntityID, rec07.IVDCaseNumber.Trim());
+                            PersonCaseUpdate(rec07, EntityID, rec07.IVDCaseNumber.Trim());
                         //////////////////////////////////////////////////////////
                         /// EntityID represent either PersonID or OrganizationID
                         /// Adding the record case to the KCCases table needs to
@@ -1232,7 +1283,7 @@ namespace PersonLoad
             { throw; }
         }
 
-        private static void PersonCaseProperties(RecordType07 rec07, Guid EntityID, string altCaseNumber)
+        private static void PersonCaseUpdate(RecordType07 rec07, Guid EntityID, string altCaseNumber)
         {
             //check to see if the IVDCaseNumber matches a record in the AltCaseNumber
             using(var db = new PersonDBContext())
