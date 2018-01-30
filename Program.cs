@@ -686,21 +686,7 @@ namespace PersonLoad
                     if (person == null)
                     {
                         //new person
-                        person = new KCPerson()
-                        {
-                            KCPersonID = Guid.NewGuid()
-                            ,IsActive = (int)PersonStatus.Inactive
-                            ,AddressStamp = rec01.CreationStamp
-                            ,BillingEmailStamp = rec01.CreationStamp
-                            ,CreationStamp = rec01.CreationStamp
-                            ,PhoneStamp = rec01.CreationStamp
-                            ,DeliveryMethodStamp = rec01.CreationStamp
-                            ,DODStamp = rec01.CreationStamp
-                            ,EmailStamp = rec01.CreationStamp
-                            ,PaymentMethodStamp = rec01.CreationStamp
-                        };
-                        
-                        PersonUpdate(rec05, ref person);
+                        person = PersonCreate(rec05);                                          
 
                         db.KCPersons.Add(person);
 
@@ -713,7 +699,7 @@ namespace PersonLoad
                         if(PersonChanged(rec05, person) || (rec05.Address1.Trim() == String.Empty))
                         {
                             ///person.ModifiedStamp is Nullable<System.DataTime>
-                            ///and I need to convert to DataTime for date comparison
+                            ///and I need to convert to DateTime for date comparison
                             ///so I'm subtracting a year to make it older than 
                             ///the incoming input if it is null. Better solution???
                             TimeSpan timespan = new TimeSpan(-365, 0, 0, 0);
@@ -747,6 +733,82 @@ namespace PersonLoad
             }
             catch
             { throw; }
+        }
+
+        private static KCPerson PersonCreate(RecordType05 rec05)
+        {
+            try
+            {
+                KCPerson person = new KCPerson();
+                person.KCPersonID = Guid.NewGuid();
+                person.IsActive = (int)PersonStatus.Inactive; // why is this inactive?
+
+                person.PersonID = rec05.PersonID.Trim();
+                person.SSN = rec05.SSN_FTIN.Trim();
+                person.LastName = rec05.LastName.Trim();
+                person.FirstName = rec05.FirstName.Trim();
+                person.MiddleName = rec05.MiddleName.Trim();// Exception for middle name
+                person.Suffix = rec05.Suffix.Trim();
+                
+                person.Address = rec05.Address1.Trim();
+                if (!String.IsNullOrEmpty(rec05.Address2.Trim()))
+                {
+                    person.Address += (Environment.NewLine + rec05.Address2.Trim());
+                }
+                if (!String.IsNullOrEmpty(rec05.Address3.Trim()))
+                {
+                    person.Address += (Environment.NewLine + rec05.Address3.Trim());
+                }
+                
+                person.AddressStamp = rec01.CreationStamp;
+
+                person.InvalidAddress = false;
+                person.City = rec05.City.Trim();
+                person.State = rec05.State.Trim();
+                person.Zip = rec05.Zip.Trim();
+                person.Country = rec05.Country.Trim();
+
+                person.HomePhone = rec05.HomePhone.Trim();
+                person.CellPhone = rec05.CellPhone.Trim();
+                person.WorkPhone = rec05.WorkPhone.Trim();
+                person.WorkExtension = rec05.WorkExtension.Trim();
+                person.PhoneStamp = rec01.CreationStamp;
+                person.Pager = rec05.PagerNumber.Trim();
+
+                person.DateOfBirth = rec05.DateofBirth;
+                person.DateOfDeath = rec05.DateofDeath;
+                person.DODStamp = rec01.CreationStamp;
+                person.FVI = rec05.FamilyViolenceInd.Trim() == "Y" ? true : false;
+                person.eMail = rec05.EmailAddress.Trim();
+                person.EmailStamp = rec01.CreationStamp;
+                person.BillingEmail = rec05.NotificationEmailAddress.Trim();
+                person.BillingEmailStamp = rec01.CreationStamp;
+
+                byte deliveryMethodID;
+                if (byte.TryParse(rec05.DeliveryMethod.Trim(), out deliveryMethodID))
+                {
+                    if (person.KCDeliveryMethodID != deliveryMethodID)
+                    {
+                        person.KCDeliveryMethodID = deliveryMethodID;
+                        person.DeliveryMethodStamp = rec01.CreationStamp;
+                    }
+                }
+
+                if (!String.IsNullOrEmpty(rec05.IVDStatus.Trim()))
+                    person.IVDStatus = rec05.IVDStatus == "Y" ? true : false;
+                else
+                    person.IVDStatus = null;
+
+                person.ModifiedBy = "ArpLoad";
+                person.ModifiedStamp = rec01.CreationStamp;
+                person.CreationStamp = rec01.CreationStamp;
+
+                return person;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         private enum AccountType : byte { Savings, Checking, Unknown, EPC};
@@ -822,12 +884,12 @@ namespace PersonLoad
                         db.KCTrackDemographicChanges.Add(personDemoChanges);
                     }
 
+                    db.SaveChanges();
                 }
                 else
                 {
                     //don't do anything and continue
                 }
-                db.SaveChanges();
             }
         }
 
@@ -1032,43 +1094,54 @@ namespace PersonLoad
 
         private static bool IsSameAddress(string current_address, string address1, string address2, string address3)
         {
-            /// The address field from the database has one column
-            /// while the value from the file is split in three
-            /// fields (addres1, address2 and adress3)
-            /// 
+            try
+            {
+                /// The address field from the database has one column
+                /// while the value from the file is split in three
+                /// fields (addres1, address2 and adress3)
+                /// 
 
-            // New address
-            string new_address1 = address1.Trim();
-            string new_address2 = address2.Trim();
-            string new_address3 = address3.Trim();
-            StringBuilder sbNewAddress = new StringBuilder();
+                // New address
+                string new_address1 = address1.Trim();
+                string new_address2 = address2.Trim();
+                string new_address3 = address3.Trim();
+                StringBuilder sbNewAddress = new StringBuilder();
 
-            sbNewAddress.Append(new_address1);
-            if (!String.IsNullOrEmpty(new_address2))
-                sbNewAddress.Append(new_address2);
+                sbNewAddress.Append(new_address1);
+                if (!String.IsNullOrEmpty(new_address2))
+                    sbNewAddress.Append(new_address2);
 
-            if (!String.IsNullOrEmpty(new_address3))
-                sbNewAddress.Append(new_address3);
+                if (!String.IsNullOrEmpty(new_address3))
+                    sbNewAddress.Append(new_address3);
 
-            string newAddress = sbNewAddress.ToString().Replace(" ", String.Empty);
+                string leanNewAddr = sbNewAddress.ToString().Replace(" ", String.Empty);
 
             
-            // Current address
-            string[] addresses = current_address.Split(new string[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
-            string cur_addr_clean = String.Empty;
+                // Current address
+                string leanCurrAddr = String.Empty;
 
-            foreach (string addr in addresses)
-            {
-                cur_addr_clean += addr;
+                if(!String.IsNullOrEmpty(current_address))
+                {
+                    string[] addresses = current_address.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);                
+
+                    foreach (string addr in addresses)
+                    {
+                        leanCurrAddr += addr;
+                    }
+                    leanCurrAddr = leanCurrAddr.Replace(" ", String.Empty);
+                }            
+
+                // compare
+                if (leanCurrAddr == leanNewAddr)
+                    return true;
+                else
+                    return false;
             }
-
-            cur_addr_clean = cur_addr_clean.Replace(" ", String.Empty);
-
-            // compare
-            if (cur_addr_clean == newAddress)
-                return true;
-            else
-                return false;
+            catch(NullReferenceException nullref)
+            {
+                string err = nullref.ToString();
+                throw;
+            }
         }
 
         private static void PersonUpdate(RecordType05 rec05, ref KCPerson person)
@@ -1194,7 +1267,7 @@ namespace PersonLoad
             }
 
             if (!String.IsNullOrEmpty(rec05.NotificationEmailAddress.Trim())
-                && (person.BillingEmail != rec05.NotificationEmailAddress))
+                && (person.BillingEmail != rec05.NotificationEmailAddress.Trim()))
             {
                 person.BillingEmail = rec05.NotificationEmailAddress.Trim();
                 person.BillingEmailStamp = rec01.CreationStamp;
