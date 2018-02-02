@@ -802,6 +802,7 @@ namespace PersonLoad
                 person.ModifiedBy = "ArpLoad";
                 person.ModifiedStamp = rec01.CreationStamp;
                 person.CreationStamp = rec01.CreationStamp;
+                person.PaymentMethodStamp = rec01.CreationStamp;
 
                 return person;
             }
