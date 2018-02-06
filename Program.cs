@@ -787,11 +787,12 @@ namespace PersonLoad
                 byte deliveryMethodID;
                 if (byte.TryParse(rec05.DeliveryMethod.Trim(), out deliveryMethodID))
                 {
-                    if (person.KCDeliveryMethodID != deliveryMethodID)
-                    {
                         person.KCDeliveryMethodID = deliveryMethodID;
                         person.DeliveryMethodStamp = rec01.CreationStamp;
-                    }
+                }
+                else
+                {
+                    person.DeliveryMethodStamp = rec01.CreationStamp;
                 }
 
                 if (!String.IsNullOrEmpty(rec05.IVDStatus.Trim()))
